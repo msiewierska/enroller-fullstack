@@ -2,22 +2,22 @@ import "milligram";
 import './App.css';
 import {useState, useEffect} from "react";
 import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm"
 import UserPanel from "./UserPanel";
 
 function App() {
     const [loggedIn, setLoggedIn] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if (storedUser && typeof storedUser === 'string') {
-            console.log(storedUser);
-            setLoggedIn(storedUser)
+            setLoggedIn(storedUser);
         }
     }, []);
 
     async function handleLogin(email) {
         if (email) {
+            setIsLoading(true);
              const response = await fetch(`/api/participants/${email}`, {
                  method: 'GET',
                  headers: { 'Content-Type': 'application/json' }
@@ -26,7 +26,9 @@ function App() {
             if (response.ok) {
                 localStorage.setItem('user', email)
                 setLoggedIn(email);
+                setIsLoading(false);
             } else {
+                setIsLoading(false);
                 alert('Nie znaleziono użytkownika o podanym e-mailu. Zarejestruj się.')
             }
         }
@@ -34,14 +36,17 @@ function App() {
 
     async function handleRegister(email) {
         if (email) {
+            setIsLoading(true);
              const response = await fetch(`/api/participants/${email}`, {
                  method: 'GET',
                  headers: { 'Content-Type': 'application/json' }
              });
 
             if (response.ok) {
+                setIsLoading(false);
                 alert('Podany użytkownik już istnieje. Zaloguj się.')
             } else {
+                setIsLoading(true);
                  const response = await fetch('/api/participants', {
                      method: 'POST',
                      body: JSON.stringify({'login':email, 'password': '12345'}),
@@ -50,7 +55,8 @@ function App() {
 
                  if (response.ok) {
                      setLoggedIn(email);
-                     localStorage.setItem('user', email)
+                     localStorage.setItem('user', email);
+                     setIsLoading(false);
                  }
             }
         }
@@ -64,7 +70,8 @@ function App() {
     return (
         <div>
             <h1>System do zapisów na zajęcia</h1>
-            {loggedIn ? <UserPanel username={loggedIn} onLogout={logout}/> : <><LoginForm onLogin={handleLogin}/><RegisterForm onRegister={handleRegister}/></>}
+            {loggedIn ? <UserPanel username={loggedIn} onLogout={logout}/> : <><LoginForm onAction={handleLogin}/><LoginForm onAction={handleRegister} buttonLabel={"Zarejestruj się"}/></>}
+            {isLoading && <div className="loader lds-dual-ring"></div>}
         </div>
     );
 }

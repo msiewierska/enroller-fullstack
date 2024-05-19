@@ -13,7 +13,6 @@ export default function MeetingsPage({username}) {
             if (response.ok) {
                 const meetings = await response.json();
                 setMeetings(meetings);
-                setUpdateMeetingList(false);
             }
         };
         fetchMeetings();
@@ -29,7 +28,7 @@ export default function MeetingsPage({username}) {
              const nextMeetings = [...meetings, meeting];
              setMeetings(nextMeetings);
              setAddingNewMeeting(false);
-             setUpdateMeetingList(true)
+             setUpdateMeetingList(!updateMeetingList);
          }
        }
 
@@ -58,6 +57,7 @@ export default function MeetingsPage({username}) {
                 return m;
             });
             setMeetings(nextMeetings);
+            setUpdateMeetingList(!updateMeetingList);
          }
     }
 
@@ -75,6 +75,7 @@ export default function MeetingsPage({username}) {
                  return m;
              });
              setMeetings(nextMeetings);
+             setUpdateMeetingList(!updateMeetingList);
          }
     }
 
