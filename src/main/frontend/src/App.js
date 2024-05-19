@@ -68,7 +68,7 @@ function App() {
     }
 
     return (
-        <div>
+        <div className="app-wrapper">
             <h1>System do zapisów na zajęcia</h1>
             {loggedIn ? <UserPanel username={loggedIn} onLogout={logout}/> : <><LoginForm onAction={handleLogin}/><LoginForm onAction={handleRegister} buttonLabel={"Zarejestruj się"}/></>}
             {isLoading && <div className="loader lds-dual-ring"></div>}

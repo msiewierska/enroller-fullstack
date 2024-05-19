@@ -94,3 +94,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.app-wrapper {
+    margin: 40px auto;
+    width: min(80vw, 1000px);
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid gray;
+}
