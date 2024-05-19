@@ -49,9 +49,10 @@ export default function MeetingsPage({username}) {
              headers: { 'Content-Type': 'application/json' }
          });
          if (response.ok) {
+            const newParticipants = await response.json();
             const nextMeetings = meetings.map(m => {
                 if (m === meeting) {
-                    m.participants = [...m.participants, username];
+                    m.participants = newParticipants;
                 }
                 return m;
             });
@@ -66,9 +67,10 @@ export default function MeetingsPage({username}) {
          });
 
          if (response.ok) {
+             const newParticipants = await response.json();
              const nextMeetings = meetings.map(m => {
                  if (m === meeting) {
-                     m.participants = m.participants.filter(u => u !== username);
+                     m.participants = m.participants.filter(u => u.login !== username);
                  }
                  return m;
              });

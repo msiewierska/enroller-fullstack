@@ -19,7 +19,7 @@ export default function MeetingsList({meetings, username, onDelete, onSignOut, o
                     <td>
                         {
                             (meeting.participants && meeting.participants.length > 0)
-                                ? <ul>{meeting.participants.map(p => p ? <li key={p.login}>{p.login}</li> : '')}</ul>
+                                ? <ul>{meeting.participants.map(p => (p && p.login) ? <li key={p.login}>{p.login}</li> : '')}</ul>
                                 : <em>Brak uczestników</em>
                         }
                     </td>
