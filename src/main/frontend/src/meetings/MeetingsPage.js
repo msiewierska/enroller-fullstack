@@ -5,7 +5,6 @@ import MeetingsList from "./MeetingsList";
 export default function MeetingsPage({username}) {
     const [meetings, setMeetings] = useState([]);
     const [addingNewMeeting, setAddingNewMeeting] = useState(false);
-    const [updateMeetingList, setUpdateMeetingList] = useState(false);
 
     useEffect(() => {
         const fetchMeetings = async () => {
@@ -16,7 +15,7 @@ export default function MeetingsPage({username}) {
             }
         };
         fetchMeetings();
-    }, [updateMeetingList]);
+    }, []);
 
     async function handleNewMeeting(meeting) {
          const response = await fetch('/api/meetings', {
@@ -25,10 +24,10 @@ export default function MeetingsPage({username}) {
              headers: { 'Content-Type': 'application/json' }
          });
          if (response.ok) {
-             const nextMeetings = [...meetings, meeting];
+             const addedMeeting = await response.json();
+             const nextMeetings = [...meetings, addedMeeting];
              setMeetings(nextMeetings);
              setAddingNewMeeting(false);
-             setUpdateMeetingList(!updateMeetingList);
          }
        }
 
@@ -57,7 +56,6 @@ export default function MeetingsPage({username}) {
                 return m;
             });
             setMeetings(nextMeetings);
-            setUpdateMeetingList(!updateMeetingList);
          }
     }
 
@@ -75,7 +73,6 @@ export default function MeetingsPage({username}) {
                  return m;
              });
              setMeetings(nextMeetings);
-             setUpdateMeetingList(!updateMeetingList);
          }
     }
 
