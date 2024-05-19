@@ -5,6 +5,7 @@ import MeetingsList from "./MeetingsList";
 export default function MeetingsPage({username}) {
     const [meetings, setMeetings] = useState([]);
     const [addingNewMeeting, setAddingNewMeeting] = useState(false);
+    const [updateMeetingList, setUpdateMeetingList] = useState(false);
 
     useEffect(() => {
         const fetchMeetings = async () => {
@@ -12,10 +13,11 @@ export default function MeetingsPage({username}) {
             if (response.ok) {
                 const meetings = await response.json();
                 setMeetings(meetings);
+                setUpdateMeetingList(false)
             }
         };
         fetchMeetings();
-    }, []);
+    }, [updateMeetingList]);
 
     async function handleNewMeeting(meeting) {
          const response = await fetch('/api/meetings', {
@@ -27,12 +29,19 @@ export default function MeetingsPage({username}) {
              const nextMeetings = [...meetings, meeting];
              setMeetings(nextMeetings);
              setAddingNewMeeting(false);
+             setUpdateMeetingList(true)
          }
        }
 
-    function handleDeleteMeeting(meeting) {
-        const nextMeetings = meetings.filter(m => m !== meeting);
-        setMeetings(nextMeetings);
+    async function handleDeleteMeeting(meeting) {
+         const response = await fetch(`/api/meetings/${meeting.id}`, {
+             method: 'DELETE',
+             headers: { 'Content-Type': 'application/json' }
+         });
+         if (response.ok) {
+            const nextMeetings = meetings.filter(m => m !== meeting);
+            setMeetings(nextMeetings);
+         }
     }
 
     function handleSignIn(meeting) {
